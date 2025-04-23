@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+#menu-form .prose-editor {
+    max-width: 100%;
+    min-width: 5rem;
+}
+
+/* datepicker */
+
+.datepicker-cell.disabled {
+  color: #a4a0a0;
+}
+
+.datepicker-cell.focused {
+  background-color: #d3af37;
+  color: black;
+}
+
+/* modal */
+
+.modalbox {
+  position: fixed;
+  padding: 15px;
+  border: 1px solid #000;
+  background-color: #fff;
+  min-width: 300px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow-y: scroll;
+  box-shadow: 0 19px 38px rgb(0 0 0 / 12%), 0 15px 12px rgb(0 0 0 / 22%);
+}
+
+.modalBackground {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgb(0 0 0 / 70%);
+}
+
+/* loader */
+.loader-circle {
+  width: 60px;
+  aspect-ratio: 4;
+  background: radial-gradient(circle closest-side,#000 90%,#0000) 0/calc(100%/3) 100% space;
+  clip-path: inset(0 100% 0 0);
+  animation: l1 1s steps(4) infinite;
+}
+@keyframes l1 {to{clip-path: inset(0 -34% 0 0)}}
+
+.loader-dots {
+  width: 10px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  animation: l5 1s infinite linear alternate;
+}
+
+.request-indicator,
+.htmx-request .loaded-content,
+.htmx-request.loaded-content {
+    display: none;
+}
+
+.htmx-request .request-indicator,
+.htmx-request .loader-dots,
+.htmx-request.request-indicator,
+.htmx-request.loader-dots {
+    display: block;
+}
+
+/*
+.htmx-settling .menu-form {
+  opacity: 0;
+}
+.menu-form {
+ transition: opacity 2s ease-in;
+} */
