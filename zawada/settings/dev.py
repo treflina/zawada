@@ -16,3 +16,9 @@ try:
     from .local import *
 except ImportError:
     pass
+
+INSTALLED_APPS += ["django_browser_reload",]
+
+MIDDLEWARE += [
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
+]

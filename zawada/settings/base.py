@@ -24,10 +24,12 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
+    "core",
+    "galleries",
     "home",
     "menu",
     "search",
-    "streams",
+
     'django_filters',
     "django_prose_editor",
     "django_htmx",
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     "wagtail.images",
     "wagtail.search",
     "wagtail.admin",
+    "wagtail.contrib.routable_page",
     "wagtail",
     "modelcluster",
     "taggit",
@@ -82,6 +85,8 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "js_asset.context_processors.importmap",
+                "galleries.context_processors.latest_gallery_index_with_galleries",
+                "galleries.context_processors.get_newest_menu_pk",
             ],
         },
     },
@@ -202,5 +207,11 @@ WAGTAILDOCS_EXTENSIONS = [
     "xlsx",
     "zip",
 ]
+
+WAGTAILIMAGES_IMAGE_MODEL = 'core.CustomImage'
+
+WAGTAILADMIN_GLOBAL_EDIT_LOCKS = True
+
+WAGTAIL_PASSWORD_REQUIRED_TEMPLATE = 'password_required.html'
 
 DJANGO_PROSE_EDITOR_EXTENSIONS = ["Bold"]

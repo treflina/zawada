@@ -1,0 +1,19 @@
+{% if years|length > 1 %}
+        <div class="relative m-0 p-0 z-10 select menu-button-actions">
+            <button class="flex items-center gap-2 relative px-3 py-1.5 rounded-sm
+            cursor-pointer bg-gray-50"
+            type="button" id="menubutton1" aria-haspopup="true" aria-controls="menu1">
+                Wybierz rok szkolny:
+                <svg xmlns="http://www.w3.org/2000/svg" class="down" width="12" height="9" viewBox="0 0 12 9">
+                    <polygon points="1 0, 11 0, 6 8"></polygon>
+                </svg>
+            </button>
+            <ul class="select__list rounded-sm hidden absolute w-full m-0 px-3 py-1.5 bg-gray-50" id="menu1" role="menu" aria-labelledby="menubutton1">
+                {% for year in years %}
+                <li class="select__list-item block w-full px-3 py-1.5 bg-gray-50 rounded-sm text-black" role="menuitem">
+                    <a class="dropdown-item select__list-link cursor-pointer inline-block w-full" href="{{page.get_url}}?year={{year.urlname}}" aria-label="Przejdź do galerii zdjęć z {{year.name}}">{{year.name}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}

@@ -1,74 +1,160 @@
+// ------------------------------
+// Imports
+// ------------------------------
 import Swal from 'sweetalert2';
 import Datepicker from "flowbite-datepicker/Datepicker";
 import DateRangePicker from "flowbite-datepicker/DateRangePicker";
 import pl from "flowbite-datepicker/locales/pl";
-// import pl from '../../../node_modules/flowbite-datepicker/dist/js/locales/pl';
-
-
+import Splide from '@splidejs/splide';
+import '@splidejs/splide/css';
 
 (() => {
 
-    document.addEventListener("DOMContentLoaded", function () {
-        htmx.logAll();
+  // ------------------------------
+  // Constants and Utilities
+  // ------------------------------
+  let splideInstance;
+  let wrapper, modalBackground, modal;
+
+  const supportsMotion = () =>
+    window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+
+  const getCurrentSlide = (slideItems) => {
+    for (let i = 0; i < slideItems.length; i++) {
+      if (slideItems[i].classList.contains("active")) return i;
+    }
+    return slideItems.length ? slideItems.length - 1 : 0;
+  };
+
+  const Toast = Swal.mixin({
+    toast: true,
+    timerProgressBar: true,
+    timer: 3000,
+    position: "bottom-end",
+    showConfirmButton: false,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    }
+  });
+
+  // ------------------------------
+  // SVG Icon Animation
+  // ------------------------------
+  const reinitiateAnimation = () => {
+    if (!supportsMotion()) return;
+
+    const sun = document.querySelector('#sun');
+    const bear = document.querySelector('#bear');
+
+    if (sun) {
+      sun.classList.remove('wobble-rotate');
+      void sun.offsetWidth;
+      sun.classList.add('wobble-rotate');
+    }
+
+    if (bear) {
+      bear.classList.remove('rotate-full');
+      void bear.offsetWidth;
+      bear.classList.add('rotate-full');
+    }
+  };
+
+  // ------------------------------
+  // Events Slider
+  // ------------------------------
+  const mountSplite = () => {
+    const splideEl = document.querySelector('.splide');
+    if (!splideEl) return;
+
+    if (splideInstance) splideInstance.destroy(true);
+
+    const slideItems = document.getElementsByClassName("event") || [];
+    const index_start = getCurrentSlide(slideItems);
+
+    const fontSize = parseFloat(getComputedStyle(document.body).fontSize);
+    const largeScreen = 62 * fontSize;
+    const smallScreen = 32.5 * fontSize;
+
+    splideInstance = new Splide('.splide', {
+      perPage: 3,
+      perMove: 3,
+      pagination: false,
+      start: index_start,
+      breakpoints: {
+        [largeScreen]: { perPage: 2, perMove: 1 },
+        [smallScreen]: { perPage: 1, perMove: 1 }
+      },
+      i18n: {
+        next: 'Kolejne wydarzenia',
+        prev: 'Poprzednie wydarzenia',
+      }
     });
 
-    let wrapper, modalBackground, modal;
+    splideInstance.mount();
+  };
 
-    const initializeDatepicker = () => {
-        const datepicker = document.querySelector("#datepicker");
-        const dateRangePicker = document.querySelector("#date-range-picker");
+  // ------------------------------
+  // Swipe for Lightbox
+  // ------------------------------
+  const swipeFunc = () => {
+    document.querySelector(".lb-container")?.swipe({
+      swipeLeft: () => $('#lightbox a.lb-next').trigger('click'),
+      swipeRight: () => $('#lightbox a.lb-prev').trigger('click'),
+      threshold: 25
+    });
+  };
 
-        Datepicker.locales.pl = pl.pl;
+  // ------------------------------
+  // Datepicker Setup
+  // ------------------------------
+  const initializeDatepicker = () => {
+    const datepicker = document.querySelector("#datepicker");
+    const dateRangePicker = document.querySelector("#date-range-picker");
 
+    Datepicker.locales.pl = pl.pl;
 
-        const datepickerOptions = {
-            language: "pl",
-            weekStart: 1,
-            format: "dd.mm.yyyy",
-            orientation: "bottom",
-            todayHighlight: true,
-            autohide: true,
-        }
+    const options = {
+      language: "pl",
+      weekStart: 1,
+      format: "dd.mm.yyyy",
+      orientation: "bottom",
+      todayHighlight: true,
+      autohide: true,
+    };
 
-        if (datepicker) {
-            new Datepicker(datepicker, datepickerOptions)
-        }
+    if (datepicker) new Datepicker(datepicker, options);
+    if (dateRangePicker) new DateRangePicker(dateRangePicker, { language: "pl" });
+  };
 
-        if (dateRangePicker) {
-            const rangePicker = new DateRangePicker(dateRangePicker, { language: "pl" });
-            console.log(rangePicker)
-        }
+  // ------------------------------
+  // Modal Helpers
+  // ------------------------------
+  const openModal = () => {
+    modal.classList.remove("hidden");
+    modalBackground.classList.remove("hidden");
+    modal.focus();
+    if (!modal.classList.contains("no-inert")) {
+      wrapper.setAttribute("inert", "");
     }
+  };
 
-    initializeDatepicker()
+  const closeModal = () => {
+    modal.classList.add("hidden");
+    modal.innerHTML = "";
+    modalBackground.classList.add("hidden");
+    wrapper.removeAttribute("inert");
+  };
 
-    const Toast = Swal.mixin({
-            toast: true,
-            timerProgressBar: true,
-            timer: 3000,
-            position: "bottom-end",
-            showConfirmButton: false,
-            didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-            }
-        })
-
-    const closeModal = () => {
-        modal.classList.add("hidden");
-        modal.innerHTML = "";
-        modalBackground.classList.add("hidden");
-        wrapper.removeAttribute("inert");
+  // ------------------------------
+  // HTMX Event Listeners
+  // ------------------------------
+    document.addEventListener("DOMContentLoaded", () => {
+        swipeFunc();
+        initializeDatepicker();
+        mountSplite();
     }
-
-    const openModal = (e) => {
-        modal.classList.remove("hidden");
-        modalBackground.classList.remove("hidden");
-        modal.focus();
-        !modal.classList.contains("no-inert") && wrapper.setAttribute("inert", "");
-    }
-
-
+    );
 
     document.addEventListener("htmx:beforeSwap", (e) => {
         if (e.detail.target.id == "modal" && (!e.detail.xhr.response || e.detail.xhr.response == "")) {
@@ -78,7 +164,10 @@ import pl from "flowbite-datepicker/locales/pl";
     })
 
     document.addEventListener("htmx:afterSettle", (e) => {
+        reinitiateAnimation();
+        swipeFunc();
         initializeDatepicker();
+        mountSplite();
 
         const cancelBtns = document.querySelectorAll(".cancelBtn");
 
@@ -105,7 +194,6 @@ import pl from "flowbite-datepicker/locales/pl";
         modal = document.querySelector("#modal");
     });
 
-    // Delete absence confirmation
     document.addEventListener('htmx:confirm', function (evt) {
 
         if (!evt.detail.elt.hasAttribute('confirm-swal') && !evt.detail.elt.hasAttribute('confirm-swal2')) {
@@ -167,10 +255,5 @@ import pl from "flowbite-datepicker/locales/pl";
             background: bcg || "#e0f6e2",
             text: message || "Data has been successfully changed.",
         })
-    })
-
-    document.addEventListener("menuDeleted", function (e) {
-        console.log("deleted")
-        // window.replaceState({}, "", "/billings/")
     })
 })();

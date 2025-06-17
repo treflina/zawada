@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class StreamsConfig(AppConfig):
+class GalleriesConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "streams"
+    name = "galleries"

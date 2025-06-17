@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags  %}
+{% block extra_css %}
+<style>
+@keyframes wobble {
+  0%   {
+
+    opacity: 0.2;
+  }
+  60% {
+    transform: rotate(0deg);
+    opacity: 0.6;
+  }
+  75% {
+    transform: rotate(5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+
+  }
+}
+
+@keyframes rotate360 {
+  0%   { transform: rotate(0deg); }
+  100%  { transform: rotate(13deg); }
+
+}
+
+
+@media (prefers-reduced-motion: no-preference) {
+  .wobble-rotate {
+    animation: wobble 5s ease-in forwards;
+    animation-iteration-count: 1;
+    transform-origin: center;
+  }
+
+  .rotate-full {
+    animation: rotate360 4s ease-in forwards;
+    animation-iteration-count: 1;
+    transform-origin: center;
+  }
+}
+</style>
+{% endblock %}
+{% block body_class %}bg-[#dde6e5] overflow-hidden{% endblock %}
+{% block content %}
+<main class="relative mx-auto max-w-[1200px] flex flex-col justify-center items-center">
+    <h1 class='mt-8 mb-8 text-5xl text-center font-poetsen'>Przedszkole Publiczne w&nbsp;Zawadzie</h1>
+    {% comment %} <h1 class='font-semibold mb-8 text-3xl font-["Poetsen_One"]'>Strona w budowie</h1> {% endcomment %}
+    <img class="inline-block w-[1000px] h-64 sm:h-auto object-cover object-center rounded-md shadow-md -z-20" src="{% static 'img/przedszk3.jpg' %}"/>
+    {% if events %}
+    <section class="relative splide events__wrapper h-min max-w-[90%] w-7xl mt-8 mx-auto" aria-label="Slajder z wydarzeniami">
+      <div class="splide__arrows">
+        <button class="splide__arrow splide__arrow--prev">
+          <svg alt="strzałka w lewo" class="">
+            <use href="{% static 'img/sprite.svg' %}#chevron-r" />
+          </svg>
+        </button>
+        <button class="splide__arrow splide__arrow--next">
+          <svg  alt="strzałka w prawo" >
+            <use href="{% static 'img/sprite.svg' %}#chevron-r" />
+          </svg>
+        </button>
+      </div>
+      <div class="splide__track events events-slider max-w-[90vw]">
+        <ul class="splide__list">
+          {% for event in events %}
+          <li class="splide__slide">
+            <div class="event flex justify-center h-auto w-full max-w-[90vw] sm:max-w-[30rem] p-2 {% if not event.is_past %} active {% endif %}">
+                <div class='event__date font-poetsen flex justify-center items-center
+                w-20 min-w-20 h-20 -mr-10 rounded-full border-none shadow-md bg-teal-800
+                text-white text-2xl z-10'>{{ event.date|date:"d.m."}}</div>
+                <p class="event__descr flex justify-center items-center min-w-[70%]
+                my-1 py-1 pr-3 pl-12 border-none shadow-md rounded-md text-lg bg-white">{{ event.description }}</p>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+    {% endif %}
+    <svg id="sun" alt="" class="inline-block fill-amber-50 w-96 h-96 absolute top-6 -left-52 -z-30 opacity-60 rotate-full">
+      <use href="{% static 'img/sprite.svg' %}#sun" />
+    </svg>
+    <svg id="bear" alt="" class="inline-block fill-emerald-50 w-96 h-96 absolute -bottom-8 -right-52 -rotate-30 -z-10 wobble-rotate">
+      <use href="{% static 'img/sprite.svg' %}#bear" />
+    </svg>
+
+</main>
+<script>
+
+</script>
+{% endblock content %}

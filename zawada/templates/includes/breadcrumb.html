@@ -1,0 +1,28 @@
+{% load static wagtailcore_tags %}
+{% with self.get_ancestors as ancestors %}
+{% if ancestors|length > 1 %}
+<nav class="breadcrumb mb-8 self-start" hx-boost="true">
+    <ul class="flex flex-wrap items-center">
+        {% for page in ancestors %}
+        {% if page.is_root == False %}
+            <li class="relative flex items-center gap-1">
+                {% if ancestors|length == 2 %}
+                <svg class="h-3 w-3 fill-[#d3af37] mt-1 mr-1 align-bottom rotate-180" alt="" aria-hidden="true">
+                    <use href="{% static 'img/sprite.svg' %}#chevron-r" />
+                </svg>
+                {% endif %}
+                <a href="{% pageurl page %}"
+                class="relative text-sky-800 font-semibold underline hover:no-underline">{{ page.title }}
+                </a>
+                {% if ancestors|length > 2 %}
+                <svg class="chevron h-3 w-3 fill-[#d3af37] mt-1 mr-1 align-bottom" alt="" aria-hidden="true">
+                    <use href="{% static 'img/sprite.svg' %}#chevron-r" />
+                </svg>
+                {% endif %}
+            </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+</nav>
+{% endwith %}

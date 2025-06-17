@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% load static %}
+{% block extra_js %}
+<script src="{% static 'js/dropdown.min.js' %}" defer></script>
+{%endblock%}
+{% block body_class %}bg-[#dde6e5]{% endblock %}
+{% block content %}
+<main id="gallery-index"
+  class="modal-wrapper flex flex-col w-full mx-auto max-w-[1220px] p-2 mb-10"
+>
+    {%include 'includes/breadcrumb.html'%}
+    <h1 class="font-poetsen mb-4 text-4xl lg:mb-6 text-center md:text-left">Galerie zdjęć {{ page.year }}</h1>
+        {% comment %} {% include 'includes/dropdown_year_snippet.html' %}{% endcomment %}
+        <div class="w-full grid grid-cols-[repeat(auto-fill,_minmax(320px,_auto))] justify-items-center lg:justify-items-start gap-5 pt-4 pb-10">
+            {% for gallery in galleries %}
+            <div class="relative p-1.5 flex flex-col h-auto max-w-[calc(100%-1rem)] sm:max-w-[350px] bg-gray-50 rounded-md shadow-md
+                overflow-hidden  hover:-translate-y-1 duration-500 transition-transform"  data-aos="fade-up">
+                {% if gallery.banner_image is not None %}
+                {% image gallery.banner_image fill-350x270 as img %}
+                <img src="{{img.url}}" alt="{{gallery.banner_image.description}}" width="{{img.width}}" height="{{img.height}}"
+                    class="block w-full h-full object-top object-cover">
+                {% endif %}
+                <div class="">
+                    <a href="{{gallery.get_url}}"
+                        hx-get="{{gallery.get_url}}"
+                        hx-select="#gallery-detail"
+                        hx-swap="outerHTML show:window:top"
+                        hx-target="#gallery-index"
+                        hx-push-url="true"
+                        class="cursor-pointer
+                        before:absolute before:inset-0 hover:before:shadow-lg hover:before:bg-[rgba(0,0,0,.15)]
+                        before:duration-500 before:transition-colors before:content-['Zobacz galerię']"
+                       aria-label="Przejdź do galerii zdjęć {{gallery.title}}">
+                    <p class="font-semibold">{{gallery.title}}</p>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="flex gap-2 flex-wrap justify-between">
+            {% if prev_index %}
+            <div class="flex gap-1 items-center mr-auto">
+                <svg class="h-3 w-3 fill-[#d3af37] mt-1 mr-1 align-bottom rotate-180" alt="" aria-hidden="true">
+                    <use href="{% static 'img/sprite.svg' %}#chevron-rr" />
+                </svg>
+                <a href="{{ prev_index.url }}"
+                    hx-get="{{ prev_index.url }}"
+                    hx-swap="outerHTML show:window:top"
+                    hx-target="#gallery-index"
+                    hx-select="#gallery-index"
+                    hx-push-url="true"
+                    class="text-sky-800 font-semibold underline hover:no-underline">
+                    Rok szkolny {{ prev_index.year.name }}
+                </a>
+            </div>
+            {% endif %}
+            {% if next_index %}
+            <div class="flex gap-1 items-center ml-auto">
+                <a href="{{ next_index.url }}"
+                    hx-get="{{ next_index.url }}"
+                    hx-swap="outerHTML show:window:top"
+                    hx-push-url="true"
+                    hx-target="#gallery-index"
+                    hx-select="#gallery-index"
+                    class="text-sky-800 font-semibold underline hover:no-underline">
+                    Rok szkolny {{ next_index.year.name }}
+                </a>
+                <svg class="h-3 w-3 fill-[#d3af37] mt-1 mr-1 align-bottom" alt="" aria-hidden="true">
+                    <use href="{% static 'img/sprite.svg' %}#chevron-rr" />
+                </svg>
+            </div>
+            {% endif %}
+        </div>
+</main>
+{%endblock content %}
+

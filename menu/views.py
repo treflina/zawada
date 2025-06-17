@@ -34,6 +34,7 @@ class MenuListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["filter"] = self.filterset
+        context["menu_page"] = "active"
         return context
 
 
@@ -48,10 +49,12 @@ def menu_detail_by_pk(request, pk):
     )
     prev_menu = Menu.objects.filter(date_from__lt=menu.date_from).first()
 
-    context = {"menu": menu, "next": next_menu, "prev": prev_menu}
+    context = {
+        "menu": menu, "next": next_menu, "prev": prev_menu, "menu_page": "active"
+        }
 
-    if request.htmx:
-        return render(request, "menu/partials/menu_detail_partial.html", context)
+    # if request.htmx:
+    #     return render(request, "menu/partials/menu_detail_partial.html", context)
     return render(request, "menu/menu_detail.html", context)
 
 
@@ -79,9 +82,11 @@ def menu_detail_by_date(request):
         menu = None
 
     context["menu"] = menu
+    context["menu_page"] = "active"
 
-    if request.htmx:
-        return render(request, "menu/partials/menu_detail_partial.html", context)
+
+    # if request.htmx:
+    #     return render(request, "menu/partials/menu_detail_partial.html", context)
     return render(request, "menu/menu_detail.html", context)
 
 
@@ -90,6 +95,8 @@ def new_menu(request):
     context = {}
     context["form"] = form
     context["creating"] = True
+    context["menu_page"] = "active"
+
     if request.method == "POST":
         form = MenuForm(request.POST)
         if form.is_valid():
@@ -106,6 +113,11 @@ class MenuUpdateView(UpdateView):
     template_name = "menu/menu_form.html"
     success_url = reverse_lazy("menu:list")
     context_object_name = "menu"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["menu_page"] = "active"
+        return context
 
 
 class MenuDeleteView(DeleteView):

@@ -1,0 +1,125 @@
+
+{% extends "base.html" %}
+{% load static wagtailcore_tags i18n %}
+{% block title%} Lista jadłospisów {% endblock %}
+{% block body_class %}bg-[#dde6e5]{% endblock %}
+{% block navbar %}
+{% endblock %}
+{% block content %}
+
+<main
+  id="main-menu"
+  class="modal-wrapper mx-auto flex w-full max-w-[1200px] flex-col items-center justify-center px-2 lg:items-start lg:justify-start"
+>
+<div class="breadcrumb mb-4 mt-2 self-start" hx-boost="true">
+  <div class="relative flex items-center gap-1">
+      <svg class="h-3 w-3 fill-[#d3af37] mt-1 mr-1 align-bottom rotate-180" alt="" aria-hidden="true">
+          <use href="{% static 'img/sprite.svg' %}#chevron-r" />
+      </svg>
+      <a href="/"
+      class="relative text-sky-800 font-semibold underline hover:no-underline">Strona główna
+      </a>
+  </div>
+</div>
+  <div
+    class="flex flex-wrap items-center justify-center gap-3 sm:justify-between"
+  >
+    <h1 class="my-6 text-3xl font-bold lg:my-10">Lista jadłospisów</h1>
+    <a
+      href="{% url 'menu:create' %}"
+      hx-get="{% url 'menu:create' %}"
+      hx-target="#main-menu"
+      hx-select="#menu-form"
+      hx-swap="outerHTML"
+      class="my-1 flex cursor-pointer items-center gap-2 rounded-full border-2 border-teal-800 bg-gray-50 px-4 py-2 font-semibold uppercase transition-all duration-300 hover:bg-[#d4bf79] hover:ring-2 hover:ring-teal-800 hover:ring-offset-2"
+    >
+      <svg class="h-6 w-6 fill-teal-800" alt="" aria-hidden="true">
+        <use href="{% static 'img/sprite.svg' %}#plus2" />
+      </svg>
+      Dodaj nowy
+    </a>
+  </div>
+  <form method="get" class="mb-6 w-full">
+    <label
+      for="id_query"
+      class="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      >Znajdź potrawę</label
+    >
+    <div class="relative">
+      <div
+        class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3"
+      >
+        <svg
+          class="h-4 w-4 text-gray-500 dark:text-gray-400"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 20 20"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+          />
+        </svg>
+      </div>
+      <input
+        type="search"
+        id="id_query"
+        name="query"
+        hx-get="{% url 'menu:list' %}"
+        hx-trigger="input changed delay:500ms, keyup[key=='Enter'], load"
+        hx-target="#menu-list"
+        hx-select="#menu-list"
+        autocomplete="off"
+        class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 ps-10 text-gray-900
+         dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 focus:outline-offset-2"
+        placeholder="Wpisz potrawę"
+        required
+      />
+      <button
+        type="submit"
+        class="absolute end-2.5 bottom-2.5 cursor-pointer rounded-lg bg-teal-800 px-4 py-2 font-semibold
+        text-white hover:bg-teal-700 focus:outline-offset-2 dark:bg-teal-700 dark:focus:ring-blue-800"
+      >
+        Wyszukaj
+      </button>
+    </div>
+  </form>
+  <div
+    id="menu-list"
+    class="flex flex-wrap justify-center gap-3 lg:justify-start"
+  >
+    {% for menu in menu_list %}
+    <a
+      href="{% url 'menu:detail' menu.id %}"
+      hx-get="{% url 'menu:detail' menu.id %}"
+      hx-target="#main-menu"
+      hx-select="#menu-detail"
+      hx-swap="outerHTML"
+      hx-push-url="true"
+      class="my-1 flex max-w-max cursor-pointer items-center justify-center gap-2 rounded-full border-2
+      border-[#d3af37] bg-gray-50 px-4 py-2 font-semibold uppercase transition-all duration-300 hover:bg-[#d4bf79] hover:ring-2 hover:ring-[#d3af37] hover:ring-offset-2"
+    >
+      {{ menu.date_from|date:"d.m." }} - {{ menu.date_to|date:"d.m.Y" }}
+    </a>
+    {% endfor %} {% if not menu_list %}
+    <p class="text-lg font-semibold">Brak jadłospisów</p>
+    {% endif %}
+  </div>
+  <div class="modalBackground hidden"></div>
+  <div id="form-wrapper">
+    <div
+      role="dialog"
+      id="modal"
+      aria-labelledby="modal-title"
+      hx-target="this"
+      class="no-inert modalbox hidden rounded-md bg-neutral-50 px-2 py-3 md:p-6 lg:w-96 lg:px-12 lg:py-6"
+      tabindex="-1"
+    ></div>
+  </div>
+  <div id="messages-box3" class="mt-4 font-semibold text-red-700"></div>
+</main>
+{% endblock content %}

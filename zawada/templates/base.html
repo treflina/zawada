@@ -24,24 +24,32 @@
         {% endif %}
 
         {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/zawada.css' %}">
+        {% comment %} <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap" rel="stylesheet"> {% endcomment %}
+        <link href="{% static 'css/lightbox.min.css' %}" rel="stylesheet" media="print" onload="this.media='all'"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/zawada.css' %}" >
 
         {% block extra_css %}
         {# Override this in templates to add extra stylesheets #}
         {% endblock %}
+        <script type="text/javascript" src="{% static 'js/main.js' %}" defer></script>
+        <script type="text/javascript" src="{% static 'js/htmx.min.js' %}" defer></script>
+        {% block extra_js %}
+
+        {%endblock%}
     </head>
 
-    <body hx-headers='{"x-csrftoken": "{{ csrf_token }}"}' class="{% block body_class %}{% endblock %}">
+    <body
+        hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
+        class="{% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
+        {% block navbar %}
+        {% include "includes/navbar.html" %}
+        {% endblock navbar %}
         {% block content %}
 
         {% endblock %}
 
-        {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/htmx.min.js' %}"></script>
-        {% block extra_js %}
-        {# Override this in templates to add extra javascript #}
-        {% endblock %}
     </body>
 </html>

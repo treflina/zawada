@@ -1,0 +1,58 @@
+{% load static wagtailcore_tags wagtailroutablepage_tags %}
+<div class="skipnav"><a href="#main">Pomiń nawigację</a></div>
+<nav class="nav bg-white mb-4">
+    <div class="relative flex justify-between items-center flex-wrap max-w-[1400px] mx-auto my-0">
+        <ul class="list-none flex gap-3 flex-wrap font-semibold text-lg" id="nav-list" hx-boost="true">
+            {% comment %} id changed from menu-list  in ul {% endcomment %}
+            <li class="relative block h-full my-auto mx-0 ">
+                <a href="/" class="inline-block p-3 w-full border-t-4 border-b-4 border-transparent
+                hover:border-[#d3af37] hover:bg-gray-100 transition-colors duration-300 nav-link menu-close {{home_page}}">
+                Strona główna
+                </a>
+            </li>
+            {% if latest_gallery_index_url %}
+            <li class="relative block h-full my-auto mx-0">
+                <a href="{{ latest_gallery_index_url }}" class="inline-block p-3 w-full border-t-4 border-b-4 border-transparent
+                hover:border-[#d3af37] hover:bg-gray-100 transition-colors duration-300 nav-link menu-close {{gallery_page}}">
+                Galerie
+                </a>
+            </li>
+            {% endif %}
+            <li class="relative block h-full my-auto mx-0">
+                <a href="{% url 'menu:detail' menu_pk %}" class="inline-block p-3 w-full border-t-4 border-b-4 border-transparent
+                hover:border-[#d3af37] hover:bg-gray-100 transition-colors duration-300 nav-link menu-close {{menu_page}}">
+                Jadłospis
+                </a>
+            </li>
+           {% comment %} {% for item in menu_items %}
+            <li class="nav__list-item nav__item">
+                {% if not item.sub_menu %}
+                <a href="{{item.href}}" class="nav__list-link nav__item-link menu-close">{{ item.text }}</a>
+                {% else %}
+                <button class="nav__list-link nav-link nav__btn" aria-haspopup="true" aria-expanded="false" data-dropdown="dropdown{{item.id}}"> {{item.text}}<img src="{% static 'img/chevrond.svg' %}" alt="" class="nav__list-icon" width="24" height="24">
+                 </button>
+                <ul class="nav__dropdown" id="dropdown{{item.id}}">
+                    {% for sub_item in item.sub_menu.items %}
+                    <li class="nav__dropdown-item "><a href="{{sub_item.href}}" class="nav__dropdown-link nav-link menu-close">{{sub_item.text}}</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </li>
+            {% endfor %} {% endcomment %}
+        </ul>
+        {% comment %} <form class="nav__search" action="{% url 'search' %}" method="get">
+            <label for="txtSearch" class="screenReaderOnly">Szukaj: </label>
+            <input id="txtSearch" type="text" placeholder="Wyszukaj" class="nav__search-input" name="query"{% if search_query %} value="{{ search_query }}"{% endif %}/>
+            <button id="btnSearch" value="Search" type="submit" class="nav__search-btn"><img src="{% static 'img/search.svg' %}" width="24" height="24"
+                    alt="Szukaj" title="Szukaj"></button>
+        </form> {% endcomment %}
+        <button class="hamburger hamburger--spring" type="button" aria-haspopup="true" aria-expanded="false">
+            <span class="hamburger-box" role="presentation"><span class="hamburger-inner" role="presentation"></span></span>
+            <span class="hamburger-text">Menu</span>
+        </button>
+        </div>
+    </nav>
+
+
+
+

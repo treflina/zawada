@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load wagtailcore_tags wagtailimages_tags %}
+{% load static %}
+{% block extra_css %}
+{% endblock %}
+{% block body_class %}bg-[#dde6e5]{% endblock %}
+{% block content %}
+<div id="gallery-detail">
+<main class="mx-auto max-w-[1220px] p-2 mb-10" >
+    {%include 'includes/breadcrumb.html'%}
+    <h1 class="font-poetsen text-3xl mt-4 lg:mt-6 mb-8 text-center md:text-left">{{ page.title }}</h1>
+    <div class="flex gap-2 items-center justify-center md:justify-start mb-6">
+      <svg class="h-5 w-5 fill-[#d3af37]" alt="" aria-hidden="true">
+        <use href="{% static 'img/sprite.svg' %}#calendar" />
+      </svg>
+      <p class="page-date">{{page.publish_date}}</p>
+    </div>
+    <div>{{page.main_text|richtext}}</div>
+    <div class="gallery photogallery mb-10">
+      <div class="wrapper photogallery__content flex justify-evenly
+        items-center flex-wrap gap-3">
+          {% for image in images %}
+          {% image image width-600 as img %}
+          <a class="gallery-image w-72 h-48 flex justify-center items-center
+              p-1.5 md:w-[230px] lg:h-[175px]
+              overflow-hidden shadow-md bg-gray-50 rounded-md"
+              href="{{image.file.url}}"
+              data-lightbox="gallery-set"
+              data-alt="{{image.description}}">
+              <span class="sr-only">Otwórz zdjęcie w powiększeniu</span>
+              <div class="w-full h-full overflow-hidden">
+                <img class="w-full h-full object-cover object-center mx-auto my-0
+                align-middle transition-transform
+                duration-300 shadow-md hover:scale-105" src="{{img.url}}"
+                alt="{{image.description}}" />
+              </div>
+            </a>
+          {% endfor %}
+          <div class="h-0 w-72 md:w-[230px]">
+          </div>
+          <div class="h-0 w-72 md:w-[230px]">
+          </div>
+          <div class="h-0 w-72 md:w-[230px]">
+          </div>
+          <div class="h-0 w-72 md:w-[230px]">
+          </div>
+        </div>
+    </div>
+    <div class="flex gap-2 flex-wrap justify-between">
+      {% if prev_gallery %}
+      <div class="flex gap-1 items-center mr-auto">
+          <svg class="h-3 w-3 fill-[#d3af37] mt-1 mr-1 align-bottom rotate-180" alt="" aria-hidden="true">
+              <use href="{% static 'img/sprite.svg' %}#chevron-rr" />
+          </svg>
+          <a href="{{ prev_gallery.url }}"
+            hx-get="{{ prev_gallery.url }}"
+            hx-target="#gallery-detail"
+            hx-swap="outerHTML show:window:top"
+            hx-select="#gallery-detail"
+            hx-push-url="true"
+            class="text-sky-800 font-semibold underline hover:no-underline">
+            {{ prev_gallery.title }}
+          </a>
+      </div>
+      {% endif %}
+      {% if next_gallery %}
+      <div class="flex gap-1 items-center ml-auto">
+          <a href="{{ next_gallery.url }}"
+            hx-get="{{ next_gallery.url }}"
+            hx-target="#gallery-detail"
+            hx-swap="outerHTML show:window:top"
+            hx-select="#gallery-detail"
+            hx-push-url="true"
+            class="text-sky-800 font-semibold underline hover:no-underline">
+            {{ next_gallery.title }}
+          </a>
+          <svg class="h-3 w-3 fill-[#d3af37] mt-1 mr-1 align-bottom" alt="" aria-hidden="true">
+              <use href="{% static 'img/sprite.svg' %}#chevron-rr" />
+          </svg>
+      </div>
+      {% endif %}
+  </div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="{% static 'js/lightbox.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.touchSwipe.min.js' %}"></script>
+</div>
+{%endblock content %}
