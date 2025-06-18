@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load static wagtailimages_tags %}
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+    figure img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    }
+
+    .block-figure caption {
+    color: #333;
+    }
+
+    .floating-share {
+        position: fixed;
+        top: 40%;
+        left: 0;
+        z-index: 1000;
+      }
+
+      .share-toggle {
+        display: none;
+        background: #1da1f2;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 0 6px 6px 0;
+        cursor: pointer;
+        font-size: 20px;
+      }
+
+      .share-menu {
+        background: #fff;
+        border-radius: 0 6px 6px 0;
+        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+        padding: 10px 5px;
+      }
+
+      .share-menu ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .share-menu li {
+        margin: 10px 0;
+        text-align: center;
+      }
+
+      .share-menu a,
+      .share-menu button {
+        display: inline-block;
+        font-size: 20px;
+        color: #444;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      .share-menu a:hover,
+      .share-menu button:hover {
+        color: #1da1f2;
+      }
+
+      /* Mobile styles */
+      @media (max-width: 768px) {
+        .floating-share {
+          top: auto;
+          bottom: 20px;
+          left: 20px;
+        }
+
+        .share-menu {
+          display: none;
+          position: absolute;
+          bottom: 50px;
+          left: 0;
+          background: white;
+          padding: 10px;
+          border-radius: 6px;
+        }
+
+        .floating-share.active .share-menu {
+          display: block;
+        }
+
+        .share-toggle {
+          display: inline-block;
+        }
+      }
+</style>
+{% endblock %}
+{% block body_class %}bg-[#dde6e5]{% endblock %}
+{% block content %}
+<main class="flex flex-col gap-4 w-full mx-auto max-w-[1200px] px-2 mb-8">
+    {%include 'includes/breadcrumb.html'%}
+<h1 class="font-poetsen text-3xl mb-2">{{ page.title }}</h1>
+<div class="flex gap-2 items-center md:justify-start mb-6">
+    <svg class="h-5 w-5 fill-[#d3af37]" alt="" aria-hidden="true">
+      <use href="{% static 'img/sprite.svg' %}#calendar" />
+    </svg>
+    <p class="page-date">{{page.publish_date}}</p>
+</div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<div class="floating-share">
+    <!-- Toggle Button for Mobile -->
+    <button class="share-toggle" aria-label="Open share menu">
+      <i class="fas fa-share-alt"></i>
+    </button>
+
+    <!-- Share Menu -->
+    <div class="share-menu">
+      <ul>
+        <li>
+          <a href="https://api.whatsapp.com/send?text={{ request.build_absolute_uri }}" target="_blank" title="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" title="Facebook">
+            <i class="fab fa-facebook"></i>
+          </a>
+        </li>
+        <li>
+          <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ page.title }}" target="_blank" title="Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+        </li>
+        <li>
+          <a href="mailto:?subject={{ page.title }}&body={{ request.build_absolute_uri }}" title="Email">
+            <i class="fas fa-envelope"></i>
+          </a>
+        </li>
+        <li>
+          <button class="copy-link-btn" title="Copy link">
+            <i class="fas fa-link"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+{{ page.body }}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const shareToggle = document.querySelector(".share-toggle");
+      const shareContainer = document.querySelector(".floating-share");
+      const copyBtn = document.querySelector(".copy-link-btn");
+
+      if (shareToggle) {
+        shareToggle.addEventListener("click", () => {
+          shareContainer.classList.toggle("active");
+        });
+      }
+
+      if (copyBtn) {
+        copyBtn.addEventListener("click", () => {
+          navigator.clipboard.writeText(window.location.href)
+            .then(() => {
+              copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+              setTimeout(() => {
+                copyBtn.innerHTML = '<i class="fas fa-link"></i>';
+              }, 1500);
+            })
+            .catch(() => {
+              alert("Failed to copy link");
+            });
+        });
+      }
+    });
+    </script>
+</main>
+{% endblock content %}

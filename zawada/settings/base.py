@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "galleries",
     "home",
     "menu",
+    "news",
     "search",
 
     'django_filters',
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.contrib.typed_table_block",
+    "wagtail.contrib.table_block",
     "wagtail.embeds",
     "wagtail.sites",
     "wagtail.users",
@@ -136,6 +138,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+WAGTAIL_I18N_ENABLED = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -209,6 +212,8 @@ WAGTAILDOCS_EXTENSIONS = [
 ]
 
 WAGTAILIMAGES_IMAGE_MODEL = 'core.CustomImage'
+
+WAGTAILDOCS_DOCUMENT_MODEL = 'core.CustomDocument'
 
 WAGTAILADMIN_GLOBAL_EDIT_LOCKS = True
 

@@ -36,20 +36,16 @@
         <script type="text/javascript" src="{% static 'js/main.js' %}" defer></script>
         <script type="text/javascript" src="{% static 'js/htmx.min.js' %}" defer></script>
         {% block extra_js %}
-
         {%endblock%}
     </head>
-
     <body
         hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
-        class="{% block body_class %}{% endblock %}">
+        class="overflow-x-hidden {% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
         {% block navbar %}
         {% include "includes/navbar.html" %}
         {% endblock navbar %}
         {% block content %}
-
         {% endblock %}
-
     </body>
 </html>

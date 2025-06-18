@@ -1,0 +1,13 @@
+{% load wagtailimages_tags %}
+
+{% if self.image.width > self.image.height %}
+<figure class="block-figure sm:max-w-4/5 w-full mx-auto my-4">
+    {% picture self.image format-{webp,jpeg} width-{500,1000} sizes="(max-width: 600px) 500px, 80vw" loading="lazy"%}
+    <figcaption class="text-sm text-gray-700 pt-1.5">{{ self.caption }}</figcaption>
+</figure>
+{% else %}
+<figure class="block-figure sm:max-w-3/5 w-full mx-auto my-4">
+    {% picture self.image format-{webp,jpeg} width-{500,800} sizes="(max-width: 600px) 500px, 60vw" loading="lazy"%}
+    <figcaption class="text-sm text-gray-700 pt-1.5">{{ self.caption }}</figcaption>
+</figure>
+{% endif %}
