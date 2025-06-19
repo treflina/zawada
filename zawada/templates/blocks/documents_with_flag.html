@@ -1,0 +1,16 @@
+{% load wagtailcore_tags static %}
+{% if newspage or self.show_on_homepage %}
+<h2 class="my-4 text-teal-800 font-poetsen text-xl">Do pobrania:</h2>
+<div class="ml-4">
+    <ul class="block-docs__list todownload-files ml-4 flex flex-col gap-3">
+        {% for doc in self.docs %}
+        <li class="block-docs__list-item">
+            <a href="{{doc.file.url}}"
+            class="text-lg underline text-sky-800 hover:text-sky-700 hover:no-underline before:fill-teal-200
+            duration-300 transition-all font-semibold">{{doc.title}}
+            <span class="block-docs__details">({{doc.get_extension}} {{doc.file_size|filesizeformat}})</span>
+            </a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}

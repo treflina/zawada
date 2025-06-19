@@ -2,54 +2,24 @@
 {% load static wagtailcore_tags  %}
 {% block extra_css %}
 <style>
-@keyframes wobble {
-  0%   {
 
-    opacity: 0.2;
-  }
-  60% {
-    transform: rotate(0deg);
-    opacity: 0.6;
-  }
-  75% {
-    transform: rotate(5deg);
-  }
-  100% {
-    transform: rotate(0deg);
-
-  }
-}
-
-@keyframes rotate360 {
-  0%   { transform: rotate(0deg); }
-  100%  { transform: rotate(13deg); }
-
-}
-
-
-@media (prefers-reduced-motion: no-preference) {
-  .wobble-rotate {
-    animation: wobble 5s ease-in forwards;
-    animation-iteration-count: 1;
-    transform-origin: center;
-  }
-
-  .rotate-full {
-    animation: rotate360 4s ease-in forwards;
-    animation-iteration-count: 1;
-    transform-origin: center;
-  }
-}
 </style>
 {% endblock %}
-{% block body_class %}bg-[#dde6e5] overflow-hidden{% endblock %}
+{% block body_class %}bg-[#dde6e5]{% endblock %}
 {% block content %}
-<main class="relative mx-auto max-w-[1200px] flex flex-col justify-center items-center">
-    <h1 class='mt-8 mb-8 text-5xl text-center font-poetsen'>Przedszkole Publiczne w&nbsp;Zawadzie</h1>
+<main class="relative w-full flex flex-col justify-center items-center">
+  <div class="mx-auto max-w-[1200px] w-full flex flex-col justify-center items-center relative">
+    <h1 class='mt-8 mb-8 text-5xl text-stone-800 text-center font-poetsen'>Przedszkole Publiczne w&nbsp;Zawadzie</h1>
     {% comment %} <h1 class='font-semibold mb-8 text-3xl font-["Poetsen_One"]'>Strona w budowie</h1> {% endcomment %}
-    <img class="inline-block w-[1000px] h-64 sm:h-auto object-cover object-center rounded-md shadow-md -z-20" src="{% static 'img/przedszk3.jpg' %}"/>
+    <img class="inline-block w-[1000px] h-64 sm:h-auto object-cover object-center rounded-md shadow-md z-20" src="{% static 'img/przedszk3.jpg' %}"/>
+    <svg id="sun" alt="" class="inline-block fill-amber-50 w-96 h-96 absolute top-6 -left-52 opacity-80 rotate-full">
+      <use href="{% static 'img/sprite.svg' %}#sun" />
+    </svg>
+    <svg id="bear" alt="" class="inline-block fill-stone-300 w-96 h-96 absolute -bottom-8 -right-52 -rotate-30 z-20 wobble-rotate">
+      <use href="{% static 'img/sprite.svg' %}#bear" />
+    </svg>
     {% if events %}
-    <section class="relative splide events__wrapper h-min max-w-[90%] w-7xl mt-8 mx-auto" aria-label="Slajder z wydarzeniami">
+    <section class="relative splide events__wrapper h-min max-w-[90%] w-7xl mt-8 mx-auto z-30" aria-label="Slajder z wydarzeniami">
       <div class="splide__arrows">
         <button class="splide__arrow splide__arrow--prev">
           <svg alt="strzałka w lewo" class="">
@@ -78,14 +48,41 @@
         </ul>
       </div>
     </section>
-    {% endif %}
-    <svg id="sun" alt="" class="inline-block fill-amber-50 w-96 h-96 absolute top-6 -left-52 -z-30 opacity-80 rotate-full">
-      <use href="{% static 'img/sprite.svg' %}#sun" />
-    </svg>
-    <svg id="bear" alt="" class="inline-block fill-stone-300 w-96 h-96 absolute -bottom-8 -right-52 -rotate-30 -z-10 wobble-rotate">
-      <use href="{% static 'img/sprite.svg' %}#bear" />
-    </svg>
-
+  </div>
+  {% endif %}
+  <section id="news" class="w-full  bg-white z-10">
+    <div class="mx-auto max-w-[1200px] flex flex-col gap-3 items-start px-2 my-4">
+      <h2 class="text-stone-800 border-b-[#d3af37] border-l-teal-800 border-b-4 border-l-4 text-3xl font-poetsen my-4 pl-3 pb-2.5">Aktualności</h2>
+      {% for newspage in newspages %}
+      <div class="w-full shadow-md rounded-md lg:px-6 px-2 lg:py-4 py-4 bg-[#f8f4e8]">
+        <div class="flex gap-2 items-center md:justify-start mb-2">
+          <svg class="h-5 w-5 fill-[#d3af37]" alt="" aria-hidden="true">
+            <use href="{% static 'img/sprite.svg' %}#calendar" />
+          </svg>
+          <p class="page-date">{{newspage.publish_date}}</p>
+        </div>
+        <a href="{{ newspage.url }}" hx-boost="true"><h3 class="font-bold text-2xl mt-2 mb-2 inline-block">{{ newspage.title }}</h3></a>
+        {{ newspage.body }}
+        {% if newspage.has_any_block_hidden_from_homepage %}
+        <a href="{{ newspage.url }}"
+          class="max-w-max ml-auto mt-4 mb-2 flex cursor-pointer items-center gap-2 rounded-full border-2 border-teal-800
+          bg-gray-50 px-4 py-2 font-semibold uppercase transition-all duration-300 hover:bg-[#f6f2e5]
+          hover:ring-2 hover:ring-teal-800 hover:ring-offset-2">Czytaj więcej</a>
+        {% endif %}
+      </div>
+      {% endfor %}
+      {% if news_index_page %}
+      <div class="my-4 flex gap-1 items-center ml-auto">
+        <a href="{{ news_index_page.url }}" hx-boost="true"
+        class="relative text-sky-800 font-semibold underline hover:no-underline">Wszystkie aktualności
+        </a>
+        <svg class="chevron h-3 w-3 fill-[#d3af37] mt-1 mr-1 align-bottom " alt="" aria-hidden="true">
+            <use href="{% static 'img/sprite.svg' %}#chevron-rr" />
+        </svg>
+      </div>
+      {% endif %}
+    </div>
+  </section>
 </main>
 <script>
 

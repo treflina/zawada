@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+{% block content %}
+<main id="news-index" class="flex flex-col gap-4 w-full mx-auto max-w-[1200px] px-2 mb-8">
+    {%include 'includes/breadcrumb.html'%}
+    <h1 class="font-poetsen text-3xl mb-2">{{ page.title }}</h1>
+    {% for newspage in posts %}
+    <div class="w-full shadow-md rounded-md lg:px-6 px-2 lg:py-4 py-4 bg-white">
+      <div class="flex gap-2 items-center md:justify-start mb-2">
+        <svg class="h-5 w-5 fill-[#d3af37]" alt="" aria-hidden="true">
+          <use href="{% static 'img/sprite.svg' %}#calendar" />
+        </svg>
+        <p class="page-date">{{newspage.publish_date}}</p>
+      </div>
+      <a href="{{ newspage.url}}"
+        class="inline-block cursor-pointer underline hover:no-underline duration-300 transition-all font-bold decoration-2">
+        <h2 class=" text-2xl mt-2 mb-3">{{ newspage.title }}</h2>
+      </a>
+      {{ newspage.body }}
+      {% if newspage.has_any_block_hidden_from_homepage %}
+      <a href="{{ newspage.url }}"
+        class="max-w-max ml-auto mt-4 mb-2 flex cursor-pointer items-center gap-2 rounded-full border-2 border-teal-800
+        bg-gray-50 px-4 py-2 font-semibold uppercase transition-all duration-300 hover:bg-[#f6f2e5]
+        hover:ring-2 hover:ring-teal-800 hover:ring-offset-2">Czytaj więcej</a>
+      {% endif %}
+    </div>
+    {% endfor %}
+    {% with "#news-index" as target_identifier %}
+    {% include 'includes/pagination.html'%}
+    {% endwith %}
+</main>
+{% endblock content %}

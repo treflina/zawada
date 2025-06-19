@@ -1,0 +1,5 @@
+{% if newspage or self.show_on_homepage %}
+<div role="region" aria-labelledby="HeadersRow-{{block.id}}" tabindex="0" class="colheaders text-normal mx-auto">
+    {{value.bound_blocks.table}}
+</div>
+{% endif %}
